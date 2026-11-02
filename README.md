@@ -147,7 +147,7 @@ js/app.js                     Estado da página, DOM e ações do usuário
 js/abertura.js                Abertura de 30 ou 10 segundos e contador de progresso
 js/mobile.js                  Navegação mobile, foco do menu e filtros recolhíveis
 assets/favicon.svg            Ícone da aplicação
-assets/uaiteche-promo-leve.gif Demonstração em GIF (30 s, 720px)
+assets/uaiteche-promo-leve.gif Demonstração em GIF (30 s, 640px)
 docs/                         Contexto, contrato da API, PRD e validação
 tests/core.test.cjs           Testes das regras e do cliente HTTP
 ```
