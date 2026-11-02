@@ -3,7 +3,7 @@
 Central web para **abrir, acompanhar e resolver chamados de suporte técnico**. É um frontend estático em HTML, CSS e JavaScript puro que consome uma API REST de chamados, conforme o [PRD](docs/prd.md).
 
 <p align="center">
-  <img src="assets/uaiteche-promo-leve.gif" alt="Demonstração da UaiTeche: painel de chamados, filtros, criação, edição e exclusão" width="720" />
+  <img src="https://github.com/walysonfelipe/uaiteche/blob/main/assets/uaiteche-promo-leve.gif?raw=true" alt="Demonstração da UaiTeche: painel de chamados, filtros, criação, edição e exclusão" width="720" />
 </p>
 
 <p align="center"><em>Menos imprevistos. Mais soluções.</em></p>
