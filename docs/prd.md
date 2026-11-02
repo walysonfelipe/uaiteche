@@ -2,18 +2,18 @@
 
 **Versão:** 1.0  
 **Data:** 02/11/2026  
-**Status:** requisitos consolidados para orientar a implementação da atividade.
+**Status:** primeira implementação concluída e validada com API simulada; integração real pendente de token e verificação de CORS.
 
 ## 1. Fontes e interpretação
 
-Este documento consolida os requisitos de [context.md](./context.md), o contrato de integração de [contrato.pdf](./contrato.pdf) e as definições técnicas do responsável pelo projeto. Não representa uma aplicação implementada nem uma integração já validada.
+Este documento consolida os requisitos de [context.md](./context.md), o contrato de integração de [contrato.pdf](./contrato.pdf) e as definições técnicas do responsável pelo projeto. Os resultados da primeira implementação e as limitações de validação estão registrados em [validation.md](./validation.md).
 
 Referências utilizadas:
 
 - **C:** contexto da atividade, objetivo, funcionalidades esperadas e campos do chamado.
 - **A1:** contrato da API, página 1: URL, autenticação, rotas, listagem e consulta individual.
 - **A2:** contrato da API, página 2: criação, atualização, exclusão, valores aceitos, validações e erros.
-- **D:** definições do responsável pelo projeto: usar somente HTML, CSS e JavaScript puro, com Tailwind CSS, Solar Icons e Notiflix via CDN.
+- **D:** definições do responsável pelo projeto: usar somente HTML, CSS e JavaScript puro, com Tailwind CSS, Solar Icons e Notiflix via CDN; configurar a URL e o token em `js/config.local.js`, ignorado pelo Git, sem solicitá-lo pela interface; oferecer filtros por categoria integrados ao menu e à lista.
 
 Os requisitos obrigatórios abaixo derivam dessas fontes. Decisões de interface, critérios complementares de qualidade e pontos que dependem de confirmação estão identificados separadamente.
 
@@ -44,7 +44,7 @@ O contrato não define perfis administrativos ou de atendente. O escopo contempl
 - Criar chamados com título, descrição, categoria e prioridade.
 - Editar título, descrição, categoria, prioridade e status.
 - Excluir chamados mediante confirmação.
-- Filtrar a lista por status e por prioridade.
+- Filtrar a lista por status, prioridade e categoria. [C, D]
 - Pesquisar chamados pelo título.
 - Apresentar mensagens de carregamento, sucesso e erro.
 - Organizar a interface em HTML, CSS e JavaScript puro, com Tailwind CSS, Solar Icons e Notiflix carregados via CDN, conforme a seção 4.3. [D]
@@ -58,6 +58,8 @@ Embora o contexto permita bibliotecas visuais opcionais, este projeto adota obri
 ### 4.3. Stack e carregamento das dependências [D]
 
 A aplicação deve funcionar como frontend estático, com arquivos HTML, CSS e JavaScript executados diretamente no navegador, sem exigir instalação de pacotes, bundler, transpilações ou etapa de build. A lógica, os eventos, a manipulação do DOM e as requisições com `fetch` devem ser implementados em JavaScript puro.
+
+**Simplicidade do código:** usar funções comuns, arrays e objetos simples, com nomes claros e comentários curtos. Não criar classes, herança, módulos autoexecutáveis ou camadas de abstração desnecessárias. Manter as operações assíncronas com `async`/`await` e as ações de confirmação com os callbacks do Notiflix.
 
 | Tecnologia | Uso obrigatório | Carregamento |
 | --- | --- | --- |
@@ -85,7 +87,7 @@ A organização a seguir é uma **proposta de produto**; as fontes não exigem p
 
 | Área | Conteúdo e ações |
 | --- | --- |
-| Acesso à API | Disponibilização do token fornecido pelo professor e orientação em caso de credencial inválida. Não pressupõe endpoint de login. |
+| Acesso à API | Token configurado diretamente em `API_TOKEN`, no arquivo `js/config.local.js`; carregamento automático dos chamados ao abrir a página e orientação em caso de credencial inválida. |
 | Meus chamados | Lista, pesquisa por título, filtros por status e prioridade, ação de novo chamado e acesso aos detalhes. |
 | Novo chamado | Formulário com título, descrição, categoria e prioridade; ações de salvar e cancelar. |
 | Detalhes / edição | Consulta de um chamado e edição dos cinco campos editáveis, incluindo status. |
@@ -112,7 +114,7 @@ Todos os requisitos desta seção são necessários à entrega. Os comportamento
 - A aplicação deve usar o mesmo mecanismo de autenticação nas cinco operações da API.
 - Uma resposta `401` deve gerar uma mensagem clara sobre o problema de autenticação, sem apresentar a operação como concluída.
 
-**Decisão de implementação:** permitir disponibilizar ou informar o token sem versionar a credencial real no repositório. Não existe fluxo de obtenção de token documentado na API.
+**Decisão de implementação:** configurar a URL da coleção em `API_URL` e o token em `API_TOKEN`, no arquivo `js/config.local.js`, ignorado pelo Git e carregado antes de `js/api.js`. Manter um exemplo com valores vazios em `js/config.example.js`. A aplicação deve consultar a lista automaticamente ao abrir a página, sem solicitar o token pela interface. Caso o token esteja ausente, malformado ou seja recusado pela API, apresentar uma mensagem de indisponibilidade de acesso e orientação para procurar o suporte. As instruções de configuração ficam na documentação técnica. Não existe fluxo de obtenção de token documentado na API.
 
 ### RF-02 — Listar chamados [C, A1]
 
@@ -163,13 +165,15 @@ O contrato não estabelece uma sequência obrigatória de transições de status
 - **Não chamar `response.json()` em uma resposta `204`**, pois não existe corpo.
 - Tratar `404` quando o chamado já tiver sido excluído ou estiver indisponível.
 
-### RF-07 — Filtrar por status e prioridade [C]
+### RF-07 — Filtrar por status, prioridade e categoria [C, D]
 
 - Oferecer filtros para os três status e para as três prioridades aceitas pela API.
+- Oferecer filtros para as categorias `hardware`, `software`, `rede` e `outro`, acessíveis no menu lateral e no seletor da lista, com seleção sincronizada. [D]
+- Mostrar os filtros ativos e disponibilizar limpeza conjunta; permitir remover somente a categoria sem alterar busca, status ou prioridade. Os contadores de categorias consideram a coleção completa. [D]
 - Permitir remover cada filtro para voltar a considerar todos os valores.
 - Mostrar mensagem quando nenhum chamado corresponder aos critérios.
 
-**Decisão de produto:** aplicar status e prioridade conjuntamente, com lógica de interseção: o registro precisa atender a todos os critérios ativos.
+**Decisão de produto:** aplicar status, prioridade e categoria conjuntamente, com lógica de interseção: o registro precisa atender a todos os critérios ativos.
 
 ### RF-08 — Pesquisar por título [C]
 
@@ -215,11 +219,7 @@ Regras adicionais:
 
 ### 8.1. URL e autenticação
 
-A URL completa da coleção informada na primeira página é:
-
-```js
-const API_URL = "<URL informada no contrato>";
-```
+A URL completa da coleção deve ser copiada do contrato para `API_URL`, no arquivo `js/config.local.js`, que não é versionado. O cliente `js/api.js` usa essa configuração em todas as operações. A configuração local também contém `API_TOKEN`; o exemplo versionado mantém ambos os valores vazios.
 
 | Operação | Método | URL | Sucesso | Corpo de resposta |
 | --- | --- | --- | --- | --- |
@@ -290,13 +290,13 @@ A camada de integração deve verificar o status HTTP: uma promessa de `fetch` r
 
 Os itens abaixo são recomendações de implementação para tornar a interface organizada e utilizável; as fontes não determinam métricas de desempenho, navegadores mínimos ou certificações de acessibilidade.
 
-- **Usabilidade:** usar rótulos em português, indicar campos obrigatórios e distinguir visualmente ações de salvar, cancelar e excluir.
+- **Usabilidade:** usar rótulos em português, indicar campos obrigatórios e distinguir visualmente ações de salvar, cancelar e excluir. Toda comunicação da interface deve se dirigir ao usuário final de uma central de suporte real, incluindo ajuda, exemplos e mensagens de erro. Referências ao professor e ao contexto acadêmico, assim como instruções sobre tokens, API e arquivos do projeto, ficam restritas à documentação técnica.
 - **Responsividade:** manter formulários, filtros e ações utilizáveis em telas de celular e computador.
 - **Acessibilidade básica:** associar rótulos aos campos, permitir uso por teclado, manter foco compreensível e não depender somente de cores para comunicar status e erros.
 - **Integridade visual:** atualizar a interface após confirmação da API; manter os critérios ativos ao recalcular a lista após alterações.
 - **Segurança no frontend:** renderizar conteúdo dos chamados como texto, evitar execução de HTML inserido pelo usuário e não exibir ou registrar o token em mensagens de diagnóstico.
 - **Manutenção:** centralizar URL e envio do token e separar responsabilidades de integração, validação, filtros e apresentação.
-- **Credencial:** preferir uso do token em memória durante a sessão; caso outra persistência seja necessária, documentar a escolha. As fontes não exigem armazenamento persistente.
+- **Credencial:** token configurado em `API_TOKEN`, no arquivo `js/config.local.js`, ignorado pelo Git; exemplo sem credencial em `js/config.example.js`. Sem formulário de credencial na interface nem persistência adicional em cookies ou armazenamento do navegador. [D]
 
 ## 10. Validação da entrega
 
@@ -311,7 +311,7 @@ Os cenários abaixo formam um roteiro de aceite. Podem ser verificados manualmen
 | Abrir e editar um chamado, inclusive seu status. | Consultar o detalhe, enviar os cinco campos editáveis e refletir a resposta `200`. | RF-04, RF-05 |
 | Cancelar a exclusão. | Manter o chamado e não enviar `DELETE`. | RF-06 |
 | Confirmar a exclusão. | Receber `204`, atualizar a lista e não tentar interpretar JSON vazio. | RF-06 |
-| Filtrar separadamente e combinar status, prioridade e trecho do título. | Mostrar somente registros que atendem a todos os critérios; limpar critérios restaura os resultados correspondentes. | RF-07, RF-08 |
+| Filtrar separadamente e combinar categoria, status, prioridade e trecho do título. | Mostrar somente registros que atendem a todos os critérios; limpar critérios restaura os resultados correspondentes. | RF-07, RF-08 |
 | Buscar termo sem resultados. | Exibir mensagem específica e permitir limpar a busca. | RF-08, RF-09 |
 | Receber `401`, `404` ou `422`. | Mostrar mensagem apropriada, incluindo erros por campo quando existentes. | RF-01, RF-04, RF-05, RF-06, RF-09 |
 | Simular falha de rede ou `500`. | Encerrar carregamento, preservar dados digitados e permitir recuperação. | RF-09 |
@@ -322,17 +322,17 @@ Respostas difíceis de provocar, como `405`, `413` e `415`, podem ser verificada
 
 Checklist de conclusão:
 
-- [ ] Frontend estático desenvolvido somente em HTML, CSS e JavaScript puro com uso de `fetch`, sem exigir instalação de pacotes ou build.
-- [ ] Tailwind CSS e Solar Icons via Iconify carregados por CDN e utilizados na interface.
-- [ ] Notiflix carregado pelo CDN especificado e utilizado para notificações, carregamento e confirmação de exclusão.
-- [ ] Token configurável e enviado em todas as operações.
+- [x] Frontend estático desenvolvido somente em HTML, CSS e JavaScript puro com uso de `fetch`, sem exigir instalação de pacotes ou build.
+- [x] Tailwind CSS e Solar Icons via Iconify carregados por CDN e utilizados na interface.
+- [x] Notiflix carregado pelo CDN especificado e utilizado para notificações, carregamento e confirmação de exclusão.
+- [x] Token configurável em `js/config.local.js` (ignorado pelo Git), enviado em todas as operações, com carregamento automático da lista.
 - [ ] Listagem, consulta, criação, edição e exclusão funcionando com a API fornecida.
-- [ ] Filtros de status e prioridade e pesquisa por título funcionando.
-- [ ] Campos, valores, limites e envio completo no `PUT` respeitados.
-- [ ] Estados de carregamento, sucesso, erro e ausência de resultados implementados.
-- [ ] Exclusão com confirmação e tratamento de `204` sem leitura de JSON.
-- [ ] Cenários de aceite executados, com registro de eventuais limitações.
-- [ ] Instruções locais de execução e configuração documentadas, sem token real versionado.
+- [x] Filtros de categoria, status e prioridade e pesquisa por título funcionando.
+- [x] Campos, valores, limites e envio completo no `PUT` respeitados.
+- [x] Estados de carregamento, sucesso, erro e ausência de resultados implementados.
+- [x] Exclusão com confirmação e tratamento de `204` sem leitura de JSON.
+- [x] Cenários de aceite executados com API simulada, com limitações registradas em [validation.md](./validation.md).
+- [x] Instruções locais de execução e configuração documentadas, sem token real versionado.
 
 O último item é uma recomendação de entrega para facilitar a avaliação, não uma exigência expressa nas fontes.
 
@@ -340,7 +340,7 @@ O último item é uma recomendação de entrega para facilitar a avaliação, n�
 
 | Ponto | Situação e encaminhamento |
 | --- | --- |
-| Token do usuário | Deve ser fornecido pelo professor; não consta nos arquivos analisados. Necessário para validar a integração real. |
+| Token do usuário | Configurar localmente em `js/config.local.js`, sem versionar a credencial. Um token válido é necessário para validar a integração real. |
 | Descrição vazia | O campo é opcional, mas o contrato não esclarece ausência, string vazia ou `null`. Confirmar o envio de string vazia e o formato retornado. |
 | Acesso pelo navegador | CORS e suporte à origem local não são descritos. Validar a partir da origem usada para executar o frontend. |
 | Datas | Os exemplos não contêm indicação de fuso horário. Não presumir conversão de fuso sem confirmação. |

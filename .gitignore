@@ -1,0 +1,7 @@
+.DS_Store
+.env
+.env.*
+/js/config.local.js
+node_modules/
+test-results/
+playwright-report/

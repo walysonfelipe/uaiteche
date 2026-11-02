@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#eff2e7" />
+    <meta
+      name="description"
+      content="Organize e acompanhe suas solicitações de suporte técnico na UaiTeche."
+    />
+    <title>Meus chamados · UaiTeche</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script
+      src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/notiflix@3/dist/notiflix-aio-3.2.8.min.js"
+      defer
+    ></script>
+    <script src="js/config.local.js" defer></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/tickets.js" defer></script>
+    <script src="js/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Menu principal">
+        <div class="sidebar-content">
+          <a class="brand" href="./" aria-label="UaiTeche — início">
+            <span class="brand-symbol" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false">
+                <path
+                  class="brand-layer brand-layer-bottom"
+                  opacity=".5"
+                  d="M21.5011 15.4992C21.8095 15.2244 22.2827 15.2511 22.5587 15.5588C22.8349 15.8671 22.8092 16.3409 22.5011 16.6174L22.4992 16.6183L22.4982 16.6203L22.4933 16.6242L22.4796 16.6359C22.4685 16.6455 22.4528 16.6591 22.4337 16.675C22.3957 16.7067 22.342 16.7503 22.2726 16.8039C22.1331 16.9117 21.9298 17.0597 21.6632 17.2326C21.1301 17.5783 20.3426 18.0235 19.2999 18.4406L16.3761 19.6105C14.4994 20.3615 13.3793 20.8088 12.0001 20.8088C10.6209 20.8088 9.50094 20.3615 7.62416 19.6105L4.70033 18.4406C3.65766 18.0235 2.87014 17.5783 2.33705 17.2326C2.07048 17.0597 1.86716 16.9117 1.72767 16.8039C1.65797 16.75 1.60359 16.7067 1.56556 16.675C1.54657 16.6591 1.53174 16.6455 1.52064 16.6359L1.50697 16.6242L1.50209 16.6203L1.50111 16.6183L1.49916 16.6174C1.19132 16.3408 1.16542 15.867 1.44154 15.5588C1.71758 15.2511 2.19078 15.2244 2.49916 15.4992L2.50306 15.5021C2.50749 15.506 2.51556 15.5137 2.52748 15.5236C2.5515 15.5437 2.59056 15.5755 2.64466 15.6174C2.75339 15.7014 2.92265 15.8257 3.15248 15.9748C3.61227 16.273 4.31396 16.6708 5.25697 17.048L8.06556 18.1711C10.0904 18.981 10.9397 19.3088 12.0001 19.3088C13.0605 19.3088 13.9099 18.981 15.9347 18.1711L18.7423 17.048C19.6852 16.6709 20.387 16.273 20.8468 15.9748C21.0767 15.8257 21.2469 15.7014 21.3556 15.6174C21.4097 15.5755 21.4488 15.5436 21.4728 15.5236C21.4848 15.5136 21.4928 15.5059 21.4972 15.5021L21.4992 15.5002L21.5011 15.4992Z"
+                />
+                <path
+                  class="brand-layer brand-layer-middle"
+                  opacity=".75"
+                  d="M21.5011 11.4396C21.8095 11.165 22.2828 11.1916 22.5587 11.4992C22.8352 11.8075 22.8094 12.2822 22.5011 12.5588L22.4992 12.5597L22.4933 12.5656L22.4796 12.5773C22.4685 12.5869 22.4528 12.5995 22.4337 12.6154C22.3957 12.6472 22.3422 12.6915 22.2726 12.7453C22.1331 12.8531 21.9298 13.0011 21.6632 13.174C21.1302 13.5197 20.3424 13.964 19.2999 14.381L16.4913 15.5051L16.3761 15.551C14.4994 16.3019 13.3793 16.7502 12.0001 16.7502C10.6209 16.7502 9.50094 16.3019 7.62416 15.551L7.50892 15.5051L4.70033 14.381C3.65789 13.964 2.87011 13.5197 2.33705 13.174C2.07056 13.0012 1.86715 12.8531 1.72767 12.7453C1.65792 12.6914 1.60361 12.6472 1.56556 12.6154C1.54669 12.5996 1.53169 12.5869 1.52064 12.5773L1.50697 12.5656L1.50111 12.5597L1.49916 12.5588C1.191 12.2822 1.16509 11.8075 1.44154 11.4992C1.71758 11.1915 2.19078 11.1658 2.49916 11.4406L2.50306 11.4435C2.50754 11.4474 2.51578 11.4543 2.52748 11.464C2.55144 11.484 2.5905 11.5159 2.64466 11.5578C2.75335 11.6418 2.92276 11.7662 3.15248 11.9152C3.61224 12.2134 4.31404 12.6112 5.25697 12.9885L8.06556 14.1125C10.0904 14.9224 10.9397 15.2502 12.0001 15.2502C13.0605 15.2502 13.9099 14.9224 15.9347 14.1125L18.7423 12.9885C19.6854 12.6112 20.387 12.2134 20.8468 11.9152C21.0767 11.7661 21.2469 11.6418 21.3556 11.5578C21.4098 11.5159 21.4488 11.484 21.4728 11.464C21.4845 11.4542 21.4927 11.4474 21.4972 11.4435L21.5011 11.4396Z"
+                />
+                <path
+                  class="brand-layer brand-layer-top"
+                  d="M12 3.25C13.3792 3.25 14.4992 3.69828 16.376 4.44922L19.3447 5.63672C20.2993 6.01854 21.0728 6.3282 21.6035 6.60645C21.872 6.74721 22.1324 6.90627 22.333 7.09863C22.5392 7.29638 22.75 7.59658 22.75 8C22.75 8.40342 22.5392 8.70362 22.333 8.90137C22.1324 9.09373 21.872 9.25279 21.6035 9.39355C21.0728 9.6718 20.2993 9.98147 19.3447 10.3633L16.376 11.5508C14.4992 12.3017 13.3792 12.75 12 12.75C10.6208 12.75 9.50081 12.3017 7.62402 11.5508L4.65527 10.3633C3.70069 9.98147 2.92722 9.6718 2.39648 9.39355C2.12801 9.25279 1.86758 9.09373 1.66699 8.90137C1.46083 8.70362 1.25 8.40342 1.25 8C1.25 7.59658 1.46083 7.29638 1.66699 7.09863C1.86758 6.90627 2.12801 6.74721 2.39648 6.60645C2.92723 6.3282 3.70068 6.01854 4.65527 5.63672L7.62402 4.44922C9.50081 3.69828 10.6208 3.25 12 3.25Z"
+                />
+              </svg>
+            </span>
+            <span class="brand-wordmark" aria-hidden="true">
+              <span class="brand-letter" style="--letter: 0">u</span
+              ><span class="brand-letter" style="--letter: 1">a</span
+              ><span class="brand-letter" style="--letter: 2">i</span
+              ><span class="brand-light"
+                ><span class="brand-letter" style="--letter: 3">t</span
+                ><span class="brand-letter" style="--letter: 4">e</span
+                ><span class="brand-letter" style="--letter: 5">c</span
+                ><span class="brand-letter" style="--letter: 6">h</span
+                ><span class="brand-letter" style="--letter: 7">e</span></span
+              ><span class="brand-dot">.</span>
+            </span>
+          </a>
+
+          <p class="nav-label">CHAMADOS</p>
+          <nav class="nav-list" aria-label="Filtrar chamados por status">
+            <button
+              class="nav-item is-active"
+              data-status=""
+              aria-pressed="true"
+            >
+              <iconify-icon
+                icon="solar:widget-2-linear"
+                aria-hidden="true"
+              ></iconify-icon
+              ><span>Todos os chamados</span
+              ><span class="nav-count" data-count="total">—</span>
+            </button>
+            <button class="nav-item" data-status="aberto">
+              <iconify-icon
+                icon="solar:inbox-linear"
+                aria-hidden="true"
+              ></iconify-icon
+              ><span>Abertos</span
+              ><span class="nav-count" data-count="aberto">—</span>
+            </button>
+            <button class="nav-item" data-status="em_andamento">
+              <iconify-icon
+                icon="solar:clock-circle-linear"
+                aria-hidden="true"
+              ></iconify-icon
+              ><span>Em andamento</span
+              ><span class="nav-count" data-count="em_andamento">—</span>
+            </button>
+            <button class="nav-item" data-status="concluido">
+              <iconify-icon
+                icon="solar:check-circle-linear"
+                aria-hidden="true"
+              ></iconify-icon
+              ><span>Concluídos</span
+              ><span class="nav-count" data-count="concluido">—</span>
+            </button>
+          </nav>
+          <section
+            class="category-section"
+            aria-labelledby="categories-heading"
+          >
+            <div class="category-heading">
+              <h2 class="nav-label" id="categories-heading">CATEGORIAS</h2>
+              <button
+                class="text-button"
+                id="clear-category"
+                data-action="clear-category"
+                hidden
+              >
+                Limpar
+              </button>
+            </div>
+            <nav
+              class="category-list"
+              aria-label="Filtrar chamados por categoria"
+            >
+              <button
+                class="category-item"
+                data-category="hardware"
+                aria-pressed="false"
+              >
+                <iconify-icon
+                  icon="solar:monitor-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                ><span>Hardware</span
+                ><span class="category-count" data-category-count="hardware"
+                  >—</span
+                >
+              </button>
+              <button
+                class="category-item"
+                data-category="software"
+                aria-pressed="false"
+              >
+                <iconify-icon
+                  icon="solar:code-square-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                ><span>Software</span
+                ><span class="category-count" data-category-count="software"
+                  >—</span
+                >
+              </button>
+              <button
+                class="category-item"
+                data-category="rede"
+                aria-pressed="false"
+              >
+                <iconify-icon
+                  icon="solar:wi-fi-router-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                ><span>Rede</span
+                ><span class="category-count" data-category-count="rede"
+                  >—</span
+                >
+              </button>
+              <button
+                class="category-item"
+                data-category="outro"
+                aria-pressed="false"
+              >
+                <iconify-icon
+                  icon="solar:box-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                ><span>Outro</span
+                ><span class="category-count" data-category-count="outro"
+                  >—</span
+                >
+              </button>
+            </nav>
+          </section>
+        </div>
+        <div class="sidebar-bottom">
+          <div class="help-card">
+            <span class="help-icon"
+              ><iconify-icon
+                icon="solar:question-circle-linear"
+                aria-hidden="true"
+              ></iconify-icon
+            ></span>
+            <div class="help-copy">
+              <h2>Ajuda rápida</h2>
+              <p>Veja como usar a central.</p>
+            </div>
+            <button
+              class="help-link"
+              data-action="help"
+              aria-label="Como funciona a central"
+            >
+              <iconify-icon
+                icon="solar:arrow-right-linear"
+                aria-hidden="true"
+              ></iconify-icon>
+            </button>
+          </div>
+          <div class="session-card">
+            <span class="session-avatar"
+              ><iconify-icon
+                icon="solar:user-rounded-linear"
+                aria-hidden="true"
+              ></iconify-icon
+            ></span>
+            <div>
+              <strong>Meu espaço</strong
+              ><small id="sidebar-session">Acesso indisponível</small>
+            </div>
+            <iconify-icon
+              icon="solar:shield-check-linear"
+              aria-hidden="true"
+            ></iconify-icon>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main-shell">
+        <header class="topbar">
+          <div class="breadcrumb">
+            <span>Central de suporte</span
+            ><iconify-icon
+              icon="solar:alt-arrow-right-linear"
+              aria-hidden="true"
+            ></iconify-icon
+            ><strong>Meus chamados</strong>
+          </div>
+          <div class="topbar-actions">
+            <span class="connection-pill" id="connection-pill"
+              ><span class="status-dot"></span
+              ><span id="connection-label">Acesso indisponível</span></span
+            ><button class="icon-button" data-action="help" aria-label="Ajuda">
+              <iconify-icon
+                icon="solar:question-circle-linear"
+                aria-hidden="true"
+              ></iconify-icon></button
+            ><button
+              class="topbar-avatar"
+              data-action="help"
+              aria-label="Abrir guia de uso"
+            >
+              U
+            </button>
+          </div>
+        </header>
+        <main id="main" class="main-content">
+          <div
+            class="page-heading flex flex-wrap items-end justify-between gap-5"
+          >
+            <div>
+              <p class="eyebrow">MENOS IMPREVISTOS. MAIS SOLUÇÕES.</p>
+              <h1>Meus chamados<span class="heading-dot">.</span></h1>
+              <p class="page-description">
+                Seu suporte técnico, organizado em um só lugar.
+              </p>
+            </div>
+            <button
+              class="button button-primary"
+              id="new-ticket"
+              data-action="new"
+            >
+              <iconify-icon
+                icon="solar:add-circle-linear"
+                aria-hidden="true"
+              ></iconify-icon
+              >Novo chamado
+            </button>
+          </div>
+
+          <section
+            class="stats-grid grid grid-cols-2 xl:grid-cols-4 gap-4"
+            aria-label="Resumo dos chamados"
+          >
+            <button class="stat-card stat-total" data-status="">
+              <div class="stat-top">
+                <span>Total de chamados</span
+                ><span class="stat-icon"
+                  ><iconify-icon
+                    icon="solar:ticket-linear"
+                    aria-hidden="true"
+                  ></iconify-icon
+                ></span>
+              </div>
+              <strong data-count="total">—</strong
+              ><span class="stat-description"
+                >Tudo em um só lugar <span aria-hidden="true">↗</span></span
+              >
+            </button>
+            <button class="stat-card" data-status="aberto">
+              <div class="stat-top">
+                <span>Abertos</span
+                ><span class="stat-icon stat-icon-open"
+                  ><iconify-icon
+                    icon="solar:inbox-linear"
+                    aria-hidden="true"
+                  ></iconify-icon
+                ></span>
+              </div>
+              <strong data-count="aberto">—</strong
+              ><span class="stat-description"
+                ><span class="mini-dot dot-open"></span>Aguardando
+                atendimento</span
+              >
+            </button>
+            <button class="stat-card" data-status="em_andamento">
+              <div class="stat-top">
+                <span>Em andamento</span
+                ><span class="stat-icon stat-icon-progress"
+                  ><iconify-icon
+                    icon="solar:clock-circle-linear"
+                    aria-hidden="true"
+                  ></iconify-icon
+                ></span>
+              </div>
+              <strong data-count="em_andamento">—</strong
+              ><span class="stat-description"
+                ><span class="mini-dot dot-progress"></span>Um passo mais perto
+                da solução</span
+              >
+            </button>
+            <button class="stat-card" data-status="concluido">
+              <div class="stat-top">
+                <span>Concluídos</span
+                ><span class="stat-icon stat-icon-done"
+                  ><iconify-icon
+                    icon="solar:check-circle-linear"
+                    aria-hidden="true"
+                  ></iconify-icon
+                ></span>
+              </div>
+              <strong data-count="concluido">—</strong
+              ><span class="stat-description"
+                ><span class="mini-dot dot-done"></span>Resolvidos, vida que
+                segue</span
+              >
+            </button>
+          </section>
+
+          <div id="page-alert" class="inline-alert" role="alert" hidden>
+            <iconify-icon
+              icon="solar:danger-triangle-linear"
+              aria-hidden="true"
+            ></iconify-icon
+            ><span id="page-alert-message"></span
+            ><button class="text-button" data-action="retry">
+              Tentar novamente
+            </button>
+          </div>
+          <section class="tickets-panel" aria-labelledby="tickets-title">
+            <div class="panel-heading">
+              <div class="flex items-center gap-3">
+                <h2 id="tickets-title">Todos os chamados</h2>
+                <span class="total-badge" id="list-count">—</span>
+              </div>
+              <button
+                class="text-button refresh-button"
+                id="refresh"
+                data-action="refresh"
+                disabled
+              >
+                <iconify-icon
+                  icon="solar:refresh-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                ><span>Atualizar</span>
+              </button>
+            </div>
+            <div class="filters">
+              <div class="search-field">
+                <iconify-icon
+                  icon="solar:minimalistic-magnifer-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                ><label class="sr-only" for="search"
+                  >Pesquisar pelo título</label
+                ><input
+                  id="search"
+                  type="search"
+                  placeholder="Pesquisar pelo título..."
+                  autocomplete="off"
+                />
+              </div>
+              <div class="filter-select">
+                <iconify-icon
+                  icon="solar:box-linear"
+                  aria-hidden="true"
+                ></iconify-icon>
+                <label class="sr-only" for="category-filter"
+                  >Filtrar por categoria</label
+                >
+                <select id="category-filter">
+                  <option value="">Todas as categorias</option>
+                  <option value="hardware">Hardware</option>
+                  <option value="software">Software</option>
+                  <option value="rede">Rede</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </div>
+              <div class="filter-select">
+                <iconify-icon
+                  icon="solar:filter-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                ><label class="sr-only" for="status-filter"
+                  >Filtrar por status</label
+                ><select id="status-filter">
+                  <option value="">Todos os status</option>
+                  <option value="aberto">Abertos</option>
+                  <option value="em_andamento">Em andamento</option>
+                  <option value="concluido">Concluídos</option>
+                </select>
+              </div>
+              <div class="filter-select">
+                <iconify-icon
+                  icon="solar:sort-from-top-to-bottom-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                ><label class="sr-only" for="priority-filter"
+                  >Filtrar por prioridade</label
+                ><select id="priority-filter">
+                  <option value="">Prioridade: todas</option>
+                  <option value="alta">Alta</option>
+                  <option value="media">Média</option>
+                  <option value="baixa">Baixa</option>
+                </select>
+              </div>
+            </div>
+            <div class="filter-summary" id="filter-summary" hidden>
+              <div
+                class="active-filter-tags"
+                id="active-filter-tags"
+                aria-label="Filtros ativos"
+              ></div>
+              <button
+                class="text-button clear-filters"
+                id="clear-filters"
+                data-action="clear"
+                hidden
+              >
+                Limpar filtros
+              </button>
+            </div>
+            <div class="table-wrapper" id="table-wrapper" hidden>
+              <table>
+                <caption class="sr-only">
+                  Seus chamados de suporte técnico
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Chamado</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Prioridade</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Criado em</th>
+                    <th scope="col" class="actions-column">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="ticket-rows"></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="empty-state" aria-live="polite">
+              <div class="empty-visual" aria-hidden="true">
+                <span class="orbit-dot orbit-dot-one"></span
+                ><span class="orbit-dot orbit-dot-two"></span
+                ><span class="empty-icon"
+                  ><iconify-icon
+                    id="empty-icon"
+                    icon="solar:link-round-angle-linear"
+                  ></iconify-icon></span
+                ><span class="empty-visual-tag"
+                  ><iconify-icon
+                    icon="solar:shield-check-bold"
+                    aria-hidden="true"
+                  ></iconify-icon
+                ></span>
+              </div>
+              <p class="empty-eyebrow" id="empty-eyebrow">PRECISA DE AJUDA?</p>
+              <h3 id="empty-title">Não conseguimos acessar seus chamados</h3>
+              <p id="empty-description">
+                Tente novamente em instantes. Se o problema continuar, entre em
+                contato com o suporte da sua empresa.
+              </p>
+              <button
+                class="button button-dark"
+                id="empty-action"
+                data-action="retry"
+              >
+                <iconify-icon
+                  icon="solar:link-round-angle-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                ><span>Tentar novamente</span></button
+              ><span class="empty-note" id="empty-note" hidden
+                ><iconify-icon
+                  icon="solar:lock-keyhole-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                >Seus chamados, seu espaço.</span
+              >
+            </div>
+            <div class="panel-footer">
+              <p id="result-summary" role="status">
+                Seus chamados aparecerão aqui quando o acesso estiver
+                disponível.
+              </p>
+              <span
+                ><span class="mini-dot"></span>Seus chamados, seu espaço.</span
+              >
+            </div>
+          </section>
+
+          <section class="tip-banner" aria-label="Dica para abrir um chamado">
+            <span class="tip-icon"
+              ><iconify-icon
+                icon="solar:lightbulb-bolt-linear"
+                aria-hidden="true"
+              ></iconify-icon
+            ></span>
+            <div>
+              <strong>Um bom chamado começa com os detalhes.</strong>
+              <p>
+                Descreva o que aconteceu, onde e desde quando. Isso ajuda a
+                chegar à solução.
+              </p>
+            </div>
+            <span class="tip-tag"
+              >FICA A DICA <span aria-hidden="true">↗</span></span
+            >
+          </section>
+          <footer class="page-footer">
+            <span>Feito para simplificar o seu dia.</span
+            ><span
+              >UaiTeche <span aria-hidden="true">©</span>
+              <span id="current-year">2026</span
+              ><span class="footer-divider">/</span
+              ><a
+                href="https://icon-sets.iconify.design/solar/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Ícones Solar · 480 Design</a
+              ></span
+            >
+          </footer>
+        </main>
+      </div>
+    </div>
+
+    <dialog
+      id="ticket-dialog"
+      class="modal ticket-modal"
+      aria-labelledby="ticket-dialog-title"
+    >
+      <div class="modal-header">
+        <span class="modal-kicker" id="ticket-kicker">VAMOS RESOLVER ISSO</span
+        ><button
+          type="button"
+          class="icon-button"
+          data-close="ticket-dialog"
+          aria-label="Fechar chamado"
+        >
+          <iconify-icon
+            icon="solar:close-circle-linear"
+            aria-hidden="true"
+          ></iconify-icon>
+        </button>
+      </div>
+      <h2 id="ticket-dialog-title">
+        Novo chamado<span class="heading-dot">.</span>
+      </h2>
+      <p class="modal-description" id="ticket-dialog-description">
+        Conte o que está acontecendo. Os detalhes fazem a diferença.
+      </p>
+      <div id="ticket-loading" class="dialog-state" role="status" hidden>
+        Consultando chamado…
+      </div>
+      <p id="ticket-error" class="inline-alert" role="alert" hidden></p>
+      <div id="save-uncertain" class="uncertain-note" hidden>
+        <p>
+          O envio pode ter sido recebido. Consulte a lista antes de tentar
+          salvar novamente.
+        </p>
+        <button type="button" class="text-button" data-action="check-list">
+          Consultar lista de chamados <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+      <form id="ticket-form" novalidate>
+        <fieldset id="ticket-fields">
+          <div class="form-field">
+            <div class="field-label-row">
+              <label for="titulo">Título <span class="required">*</span></label
+              ><span class="field-counter" id="title-counter">0/150</span>
+            </div>
+            <input
+              id="titulo"
+              name="titulo"
+              maxlength="150"
+              placeholder="Ex.: Meu computador não liga"
+              aria-describedby="titulo-error"
+              required
+            />
+            <p class="field-error" id="titulo-error" hidden></p>
+          </div>
+          <div class="form-field">
+            <div class="field-label-row">
+              <label for="descricao"
+                >Descrição <span class="optional">(opcional)</span></label
+              ><span class="field-counter" id="description-counter"
+                >0/2000</span
+              >
+            </div>
+            <textarea
+              id="descricao"
+              name="descricao"
+              maxlength="2000"
+              rows="5"
+              placeholder="O que aconteceu? Quando começou? O que você já tentou?"
+              aria-describedby="descricao-error"
+            ></textarea>
+            <p class="field-error" id="descricao-error" hidden></p>
+          </div>
+          <div class="form-grid grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="form-field">
+              <label for="categoria"
+                >Categoria <span class="required">*</span></label
+              ><select
+                id="categoria"
+                name="categoria"
+                aria-describedby="categoria-error"
+                required
+              >
+                <option value="" disabled selected>
+                  Selecione a categoria
+                </option>
+                <option value="hardware">Hardware</option>
+                <option value="software">Software</option>
+                <option value="rede">Rede</option>
+                <option value="outro">Outro</option>
+              </select>
+              <p class="field-error" id="categoria-error" hidden></p>
+            </div>
+            <div class="form-field">
+              <label for="prioridade"
+                >Prioridade <span class="required">*</span></label
+              ><select
+                id="prioridade"
+                name="prioridade"
+                aria-describedby="prioridade-error"
+                required
+              >
+                <option value="" disabled selected>
+                  Selecione a prioridade
+                </option>
+                <option value="baixa">Baixa</option>
+                <option value="media">Média</option>
+                <option value="alta">Alta</option>
+              </select>
+              <p class="field-error" id="prioridade-error" hidden></p>
+            </div>
+          </div>
+          <div class="form-field" id="status-field" hidden>
+            <label for="status">Status <span class="required">*</span></label
+            ><select id="status" name="status" aria-describedby="status-error">
+              <option value="aberto">Aberto</option>
+              <option value="em_andamento">Em andamento</option>
+              <option value="concluido">Concluído</option>
+            </select>
+            <p class="field-error" id="status-error" hidden></p>
+          </div>
+        </fieldset>
+        <dl class="ticket-metadata" id="ticket-metadata" hidden>
+          <div>
+            <dt>Criado em</dt>
+            <dd id="created-at">—</dd>
+          </div>
+          <div>
+            <dt>Atualizado em</dt>
+            <dd id="updated-at">—</dd>
+          </div>
+        </dl>
+        <div class="modal-actions">
+          <span class="required-note" id="required-note"
+            ><span class="required">*</span> Campos obrigatórios</span
+          ><button
+            class="button button-quiet"
+            type="button"
+            data-close="ticket-dialog"
+          >
+            Cancelar</button
+          ><button class="button button-primary" type="submit" id="save-ticket">
+            <iconify-icon
+              icon="solar:check-circle-linear"
+              aria-hidden="true"
+            ></iconify-icon
+            ><span>Criar chamado</span></button
+          ><button
+            type="button"
+            class="button button-primary"
+            id="edit-ticket"
+            hidden
+          >
+            <iconify-icon
+              icon="solar:pen-new-square-linear"
+              aria-hidden="true"
+            ></iconify-icon
+            >Editar chamado
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog
+      id="help-dialog"
+      class="modal help-modal"
+      aria-labelledby="help-title"
+    >
+      <div class="modal-header">
+        <span class="modal-symbol"
+          ><iconify-icon
+            icon="solar:lightbulb-bolt-linear"
+            aria-hidden="true"
+          ></iconify-icon></span
+        ><button
+          class="icon-button"
+          data-close="help-dialog"
+          aria-label="Fechar ajuda"
+        >
+          <iconify-icon
+            icon="solar:close-circle-linear"
+            aria-hidden="true"
+          ></iconify-icon>
+        </button>
+      </div>
+      <h2 id="help-title">
+        Suporte sem complicação<span class="heading-dot">.</span>
+      </h2>
+      <p class="modal-description">
+        Do primeiro relato à solução, acompanhe tudo por aqui.
+      </p>
+      <ol class="help-steps">
+        <li>
+          <span>01</span>
+          <div>
+            <h3>Abra um chamado</h3>
+            <p>
+              Clique em “Novo chamado” para registrar sua solicitação de suporte
+              técnico. Seus pedidos ficam reunidos nesta central.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span>02</span>
+          <div>
+            <h3>Conte o que aconteceu</h3>
+            <p>
+              Dê um título claro, descreva o problema e escolha a categoria e a
+              prioridade. Quanto mais detalhes, mais fácil entender sua
+              necessidade.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span>03</span>
+          <div>
+            <h3>Acompanhe e organize</h3>
+            <p>
+              Pesquise, filtre, consulte os detalhes e edite seus chamados. Para
+              excluir, você sempre precisa confirmar.
+            </p>
+          </div>
+        </li>
+      </ol>
+      <button class="button button-primary help-done" data-close="help-dialog">
+        Tudo certo<iconify-icon
+          icon="solar:check-circle-linear"
+          aria-hidden="true"
+        ></iconify-icon>
+      </button>
+    </dialog>
+    <div class="sr-only" id="announcer" role="status" aria-live="polite"></div>
+    <noscript
+      ><p class="noscript-message">
+        Ative o JavaScript no navegador para usar a Central de Chamados.
+      </p></noscript
+    >
+  </body>
+</html>
