@@ -2,7 +2,10 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <meta name="theme-color" content="#eff2e7" />
     <meta
       name="description"
@@ -18,6 +21,13 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 760px)" />
+    <link
+      rel="stylesheet"
+      href="css/mobile-content.css"
+      media="(max-width: 760px)"
+    />
+    <script src="js/abertura.js" defer></script>
     <script
       src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"
       defer
@@ -30,11 +40,92 @@
     <script src="js/api.js" defer></script>
     <script src="js/tickets.js" defer></script>
     <script src="js/app.js" defer></script>
+    <script src="js/mobile.js" defer></script>
   </head>
-  <body>
-    <a class="skip-link" href="#main">Pular para o conteúdo</a>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="Menu principal">
+  <body class="is-opening">
+    <div
+      class="splash-screen"
+      id="splash-screen"
+      role="status"
+      aria-labelledby="splash-title"
+    >
+      <div class="splash-content">
+        <div class="brand splash-brand" role="img" aria-label="UaiTeche">
+          <span class="brand-symbol" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor" focusable="false">
+              <path
+                class="brand-layer brand-layer-bottom"
+                opacity=".5"
+                d="M21.5011 15.4992C21.8095 15.2244 22.2827 15.2511 22.5587 15.5588C22.8349 15.8671 22.8092 16.3409 22.5011 16.6174L22.4992 16.6183L22.4982 16.6203L22.4933 16.6242L22.4796 16.6359C22.4685 16.6455 22.4528 16.6591 22.4337 16.675C22.3957 16.7067 22.342 16.7503 22.2726 16.8039C22.1331 16.9117 21.9298 17.0597 21.6632 17.2326C21.1301 17.5783 20.3426 18.0235 19.2999 18.4406L16.3761 19.6105C14.4994 20.3615 13.3793 20.8088 12.0001 20.8088C10.6209 20.8088 9.50094 20.3615 7.62416 19.6105L4.70033 18.4406C3.65766 18.0235 2.87014 17.5783 2.33705 17.2326C2.07048 17.0597 1.86716 16.9117 1.72767 16.8039C1.65797 16.75 1.60359 16.7067 1.56556 16.675C1.54657 16.6591 1.53174 16.6455 1.52064 16.6359L1.50697 16.6242L1.50209 16.6203L1.50111 16.6183L1.49916 16.6174C1.19132 16.3408 1.16542 15.867 1.44154 15.5588C1.71758 15.2511 2.19078 15.2244 2.49916 15.4992L2.50306 15.5021C2.50749 15.506 2.51556 15.5137 2.52748 15.5236C2.5515 15.5437 2.59056 15.5755 2.64466 15.6174C2.75339 15.7014 2.92265 15.8257 3.15248 15.9748C3.61227 16.273 4.31396 16.6708 5.25697 17.048L8.06556 18.1711C10.0904 18.981 10.9397 19.3088 12.0001 19.3088C13.0605 19.3088 13.9099 18.981 15.9347 18.1711L18.7423 17.048C19.6852 16.6709 20.387 16.273 20.8468 15.9748C21.0767 15.8257 21.2469 15.7014 21.3556 15.6174C21.4097 15.5755 21.4488 15.5436 21.4728 15.5236C21.4848 15.5136 21.4928 15.5059 21.4972 15.5021L21.4992 15.5002L21.5011 15.4992Z"
+              />
+              <path
+                class="brand-layer brand-layer-middle"
+                opacity=".75"
+                d="M21.5011 11.4396C21.8095 11.165 22.2828 11.1916 22.5587 11.4992C22.8352 11.8075 22.8094 12.2822 22.5011 12.5588L22.4992 12.5597L22.4933 12.5656L22.4796 12.5773C22.4685 12.5869 22.4528 12.5995 22.4337 12.6154C22.3957 12.6472 22.3422 12.6915 22.2726 12.7453C22.1331 12.8531 21.9298 13.0011 21.6632 13.174C21.1302 13.5197 20.3424 13.964 19.2999 14.381L16.4913 15.5051L16.3761 15.551C14.4994 16.3019 13.3793 16.7502 12.0001 16.7502C10.6209 16.7502 9.50094 16.3019 7.62416 15.551L7.50892 15.5051L4.70033 14.381C3.65789 13.964 2.87011 13.5197 2.33705 13.174C2.07056 13.0012 1.86715 12.8531 1.72767 12.7453C1.65792 12.6914 1.60361 12.6472 1.56556 12.6154C1.54669 12.5996 1.53169 12.5869 1.52064 12.5773L1.50697 12.5656L1.50111 12.5597L1.49916 12.5588C1.191 12.2822 1.16509 11.8075 1.44154 11.4992C1.71758 11.1915 2.19078 11.1658 2.49916 11.4406L2.50306 11.4435C2.50754 11.4474 2.51578 11.4543 2.52748 11.464C2.55144 11.484 2.5905 11.5159 2.64466 11.5578C2.75335 11.6418 2.92276 11.7662 3.15248 11.9152C3.61224 12.2134 4.31404 12.6112 5.25697 12.9885L8.06556 14.1125C10.0904 14.9224 10.9397 15.2502 12.0001 15.2502C13.0605 15.2502 13.9099 14.9224 15.9347 14.1125L18.7423 12.9885C19.6854 12.6112 20.387 12.2134 20.8468 11.9152C21.0767 11.7661 21.2469 11.6418 21.3556 11.5578C21.4098 11.5159 21.4488 11.484 21.4728 11.464C21.4845 11.4542 21.4927 11.4474 21.4972 11.4435L21.5011 11.4396Z"
+              />
+              <path
+                class="brand-layer brand-layer-top"
+                d="M12 3.25C13.3792 3.25 14.4992 3.69828 16.376 4.44922L19.3447 5.63672C20.2993 6.01854 21.0728 6.3282 21.6035 6.60645C21.872 6.74721 22.1324 6.90627 22.333 7.09863C22.5392 7.29638 22.75 7.59658 22.75 8C22.75 8.40342 22.5392 8.70362 22.333 8.90137C22.1324 9.09373 21.872 9.25279 21.6035 9.39355C21.0728 9.6718 20.2993 9.98147 19.3447 10.3633L16.376 11.5508C14.4992 12.3017 13.3792 12.75 12 12.75C10.6208 12.75 9.50081 12.3017 7.62402 11.5508L4.65527 10.3633C3.70069 9.98147 2.92722 9.6718 2.39648 9.39355C2.12801 9.25279 1.86758 9.09373 1.66699 8.90137C1.46083 8.70362 1.25 8.40342 1.25 8C1.25 7.59658 1.46083 7.29638 1.66699 7.09863C1.86758 6.90627 2.12801 6.74721 2.39648 6.60645C2.92723 6.3282 3.70068 6.01854 4.65527 5.63672L7.62402 4.44922C9.50081 3.69828 10.6208 3.25 12 3.25Z"
+              />
+            </svg>
+          </span>
+          <span class="brand-wordmark" aria-hidden="true">
+            <span class="brand-letter" style="--letter: 0">u</span
+            ><span class="brand-letter" style="--letter: 1">a</span
+            ><span class="brand-letter" style="--letter: 2">i</span
+            ><span class="brand-light"
+              ><span class="brand-letter" style="--letter: 3">t</span
+              ><span class="brand-letter" style="--letter: 4">e</span
+              ><span class="brand-letter" style="--letter: 5">c</span
+              ><span class="brand-letter" style="--letter: 6">h</span
+              ><span class="brand-letter" style="--letter: 7">e</span></span
+            ><span class="brand-dot">.</span>
+          </span>
+        </div>
+        <p class="splash-title" id="splash-title">Preparando sua central</p>
+        <p class="splash-description">Seu suporte técnico, em um só lugar.</p>
+        <div
+          class="splash-progress"
+          id="splash-progress"
+          role="progressbar"
+          aria-label="Tempo de abertura da central"
+          aria-valuemin="0"
+          aria-valuemax="30"
+          aria-valuenow="0"
+        >
+          <span id="splash-progress-fill"></span>
+        </div>
+        <p class="splash-countdown" aria-hidden="true">
+          Entrando em <span id="splash-countdown">30</span> segundos
+        </p>
+      </div>
+      <p class="splash-footer">MENOS IMPREVISTOS. MAIS SOLUÇÕES.</p>
+    </div>
+    <div class="app-shell" inert>
+      <a class="skip-link" href="#main">Pular para o conteúdo</a>
+      <div
+        id="menu-backdrop"
+        class="menu-backdrop mobile-only"
+        data-mobile-action="close-menu"
+        aria-hidden="true"
+        hidden
+      ></div>
+      <aside id="app-menu" class="sidebar" aria-label="Menu principal">
+        <div class="sheet-grip mobile-only" aria-hidden="true"></div>
+        <div class="sheet-header mobile-only">
+          <h2 id="mobile-menu-title">Filtros</h2>
+          <button
+            class="icon-button menu-close"
+            type="button"
+            data-mobile-action="close-menu"
+            aria-label="Fechar filtros"
+          >
+            <iconify-icon
+              icon="solar:close-circle-linear"
+              aria-hidden="true"
+            ></iconify-icon>
+          </button>
+        </div>
         <div class="sidebar-content">
           <a class="brand" href="./" aria-label="UaiTeche — início">
             <span class="brand-symbol" aria-hidden="true">
@@ -69,7 +160,7 @@
             </span>
           </a>
 
-          <p class="nav-label">CHAMADOS</p>
+          <p class="nav-label">Chamados</p>
           <nav class="nav-list" aria-label="Filtrar chamados por status">
             <button
               class="nav-item is-active"
@@ -113,7 +204,7 @@
             aria-labelledby="categories-heading"
           >
             <div class="category-heading">
-              <h2 class="nav-label" id="categories-heading">CATEGORIAS</h2>
+              <h2 class="nav-label" id="categories-heading">Categorias</h2>
               <button
                 class="text-button"
                 id="clear-category"
@@ -135,8 +226,8 @@
                 <iconify-icon
                   icon="solar:monitor-linear"
                   aria-hidden="true"
-                ></iconify-icon
-                ><span>Hardware</span
+                ></iconify-icon>
+                <span>Hardware</span
                 ><span class="category-count" data-category-count="hardware"
                   >—</span
                 >
@@ -149,8 +240,8 @@
                 <iconify-icon
                   icon="solar:code-square-linear"
                   aria-hidden="true"
-                ></iconify-icon
-                ><span>Software</span
+                ></iconify-icon>
+                <span>Software</span
                 ><span class="category-count" data-category-count="software"
                   >—</span
                 >
@@ -163,8 +254,8 @@
                 <iconify-icon
                   icon="solar:wi-fi-router-linear"
                   aria-hidden="true"
-                ></iconify-icon
-                ><span>Rede</span
+                ></iconify-icon>
+                <span>Rede</span
                 ><span class="category-count" data-category-count="rede"
                   >—</span
                 >
@@ -177,8 +268,8 @@
                 <iconify-icon
                   icon="solar:box-linear"
                   aria-hidden="true"
-                ></iconify-icon
-                ><span>Outro</span
+                ></iconify-icon>
+                <span>Outro</span
                 ><span class="category-count" data-category-count="outro"
                   >—</span
                 >
@@ -186,98 +277,132 @@
             </nav>
           </section>
         </div>
-        <div class="sidebar-bottom">
-          <div class="help-card">
-            <span class="help-icon"
-              ><iconify-icon
-                icon="solar:question-circle-linear"
-                aria-hidden="true"
-              ></iconify-icon
-            ></span>
-            <div class="help-copy">
-              <h2>Ajuda rápida</h2>
-              <p>Veja como usar a central.</p>
-            </div>
-            <button
-              class="help-link"
-              data-action="help"
-              aria-label="Como funciona a central"
-            >
-              <iconify-icon
-                icon="solar:arrow-right-linear"
-                aria-hidden="true"
-              ></iconify-icon>
-            </button>
-          </div>
-          <div class="session-card">
-            <span class="session-avatar"
-              ><iconify-icon
-                icon="solar:user-rounded-linear"
-                aria-hidden="true"
-              ></iconify-icon
-            ></span>
-            <div>
-              <strong>Meu espaço</strong
-              ><small id="sidebar-session">Acesso indisponível</small>
-            </div>
-            <iconify-icon
-              icon="solar:shield-check-linear"
-              aria-hidden="true"
-            ></iconify-icon>
+        <div class="sidebar-profile" aria-label="Usuário atual">
+          <span class="profile-avatar" aria-hidden="true">FM</span>
+          <div class="profile-details">
+            <strong>Felipe Maciel</strong>
+            <span>Proprietário</span>
           </div>
         </div>
       </aside>
 
-      <div class="main-shell">
-        <header class="topbar">
-          <div class="breadcrumb">
-            <span>Central de suporte</span
-            ><iconify-icon
-              icon="solar:alt-arrow-right-linear"
-              aria-hidden="true"
-            ></iconify-icon
-            ><strong>Meus chamados</strong>
-          </div>
-          <div class="topbar-actions">
-            <span class="connection-pill" id="connection-pill"
-              ><span class="status-dot"></span
-              ><span id="connection-label">Acesso indisponível</span></span
-            ><button class="icon-button" data-action="help" aria-label="Ajuda">
-              <iconify-icon
-                icon="solar:question-circle-linear"
-                aria-hidden="true"
-              ></iconify-icon></button
-            ><button
-              class="topbar-avatar"
-              data-action="help"
-              aria-label="Abrir guia de uso"
-            >
-              U
-            </button>
-          </div>
-        </header>
-        <main id="main" class="main-content">
-          <div
-            class="page-heading flex flex-wrap items-end justify-between gap-5"
+      <section
+        id="mobile-profile-sheet"
+        class="profile-sheet mobile-only"
+        aria-labelledby="mobile-profile-title"
+        aria-hidden="true"
+        inert
+      >
+        <div class="sheet-grip" aria-hidden="true"></div>
+        <div class="sheet-header">
+          <h2 id="mobile-profile-title">Meu perfil</h2>
+          <button
+            class="icon-button profile-close"
+            type="button"
+            data-mobile-action="close-menu"
+            aria-label="Fechar perfil"
           >
-            <div>
-              <p class="eyebrow">MENOS IMPREVISTOS. MAIS SOLUÇÕES.</p>
-              <h1>Meus chamados<span class="heading-dot">.</span></h1>
+            <iconify-icon
+              icon="solar:close-circle-linear"
+              aria-hidden="true"
+            ></iconify-icon>
+          </button>
+        </div>
+        <div class="mobile-profile-summary">
+          <span class="profile-avatar" aria-hidden="true">FM</span>
+          <div class="profile-details">
+            <strong>Felipe Maciel</strong>
+            <span>Proprietário</span>
+          </div>
+        </div>
+        <button class="profile-tickets" type="button" data-mobile-action="home">
+          <iconify-icon
+            icon="solar:ticket-linear"
+            aria-hidden="true"
+          ></iconify-icon>
+          <span>Ver meus chamados</span>
+          <iconify-icon
+            icon="solar:alt-arrow-right-linear"
+            aria-hidden="true"
+          ></iconify-icon>
+        </button>
+      </section>
+
+      <div class="main-shell">
+        <main id="main" class="main-content">
+          <div class="page-heading">
+            <a
+              class="brand mobile-header-brand mobile-only"
+              href="#main"
+              aria-label="UaiTeche — início"
+            >
+              <span class="brand-symbol" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor" focusable="false">
+                  <path
+                    class="brand-layer brand-layer-bottom"
+                    opacity=".5"
+                    d="M21.5011 15.4992C21.8095 15.2244 22.2827 15.2511 22.5587 15.5588C22.8349 15.8671 22.8092 16.3409 22.5011 16.6174L22.4992 16.6183L22.4982 16.6203L22.4933 16.6242L22.4796 16.6359C22.4685 16.6455 22.4528 16.6591 22.4337 16.675C22.3957 16.7067 22.342 16.7503 22.2726 16.8039C22.1331 16.9117 21.9298 17.0597 21.6632 17.2326C21.1301 17.5783 20.3426 18.0235 19.2999 18.4406L16.3761 19.6105C14.4994 20.3615 13.3793 20.8088 12.0001 20.8088C10.6209 20.8088 9.50094 20.3615 7.62416 19.6105L4.70033 18.4406C3.65766 18.0235 2.87014 17.5783 2.33705 17.2326C2.07048 17.0597 1.86716 16.9117 1.72767 16.8039C1.65797 16.75 1.60359 16.7067 1.56556 16.675C1.54657 16.6591 1.53174 16.6455 1.52064 16.6359L1.50697 16.6242L1.50209 16.6203L1.50111 16.6183L1.49916 16.6174C1.19132 16.3408 1.16542 15.867 1.44154 15.5588C1.71758 15.2511 2.19078 15.2244 2.49916 15.4992L2.50306 15.5021C2.50749 15.506 2.51556 15.5137 2.52748 15.5236C2.5515 15.5437 2.59056 15.5755 2.64466 15.6174C2.75339 15.7014 2.92265 15.8257 3.15248 15.9748C3.61227 16.273 4.31396 16.6708 5.25697 17.048L8.06556 18.1711C10.0904 18.981 10.9397 19.3088 12.0001 19.3088C13.0605 19.3088 13.9099 18.981 15.9347 18.1711L18.7423 17.048C19.6852 16.6709 20.387 16.273 20.8468 15.9748C21.0767 15.8257 21.2469 15.7014 21.3556 15.6174C21.4097 15.5755 21.4488 15.5436 21.4728 15.5236C21.4848 15.5136 21.4928 15.5059 21.4972 15.5021L21.4992 15.5002L21.5011 15.4992Z"
+                  />
+                  <path
+                    class="brand-layer brand-layer-middle"
+                    opacity=".75"
+                    d="M21.5011 11.4396C21.8095 11.165 22.2828 11.1916 22.5587 11.4992C22.8352 11.8075 22.8094 12.2822 22.5011 12.5588L22.4992 12.5597L22.4933 12.5656L22.4796 12.5773C22.4685 12.5869 22.4528 12.5995 22.4337 12.6154C22.3957 12.6472 22.3422 12.6915 22.2726 12.7453C22.1331 12.8531 21.9298 13.0011 21.6632 13.174C21.1302 13.5197 20.3424 13.964 19.2999 14.381L16.4913 15.5051L16.3761 15.551C14.4994 16.3019 13.3793 16.7502 12.0001 16.7502C10.6209 16.7502 9.50094 16.3019 7.62416 15.551L7.50892 15.5051L4.70033 14.381C3.65789 13.964 2.87011 13.5197 2.33705 13.174C2.07056 13.0012 1.86715 12.8531 1.72767 12.7453C1.65792 12.6914 1.60361 12.6472 1.56556 12.6154C1.54669 12.5996 1.53169 12.5869 1.52064 12.5773L1.50697 12.5656L1.50111 12.5597L1.49916 12.5588C1.191 12.2822 1.16509 11.8075 1.44154 11.4992C1.71758 11.1915 2.19078 11.1658 2.49916 11.4406L2.50306 11.4435C2.50754 11.4474 2.51578 11.4543 2.52748 11.464C2.55144 11.484 2.5905 11.5159 2.64466 11.5578C2.75335 11.6418 2.92276 11.7662 3.15248 11.9152C3.61224 12.2134 4.31404 12.6112 5.25697 12.9885L8.06556 14.1125C10.0904 14.9224 10.9397 15.2502 12.0001 15.2502C13.0605 15.2502 13.9099 14.9224 15.9347 14.1125L18.7423 12.9885C19.6854 12.6112 20.387 12.2134 20.8468 11.9152C21.0767 11.7661 21.2469 11.6418 21.3556 11.5578C21.4098 11.5159 21.4488 11.484 21.4728 11.464C21.4845 11.4542 21.4927 11.4474 21.4972 11.4435L21.5011 11.4396Z"
+                  />
+                  <path
+                    class="brand-layer brand-layer-top"
+                    d="M12 3.25C13.3792 3.25 14.4992 3.69828 16.376 4.44922L19.3447 5.63672C20.2993 6.01854 21.0728 6.3282 21.6035 6.60645C21.872 6.74721 22.1324 6.90627 22.333 7.09863C22.5392 7.29638 22.75 7.59658 22.75 8C22.75 8.40342 22.5392 8.70362 22.333 8.90137C22.1324 9.09373 21.872 9.25279 21.6035 9.39355C21.0728 9.6718 20.2993 9.98147 19.3447 10.3633L16.376 11.5508C14.4992 12.3017 13.3792 12.75 12 12.75C10.6208 12.75 9.50081 12.3017 7.62402 11.5508L4.65527 10.3633C3.70069 9.98147 2.92722 9.6718 2.39648 9.39355C2.12801 9.25279 1.86758 9.09373 1.66699 8.90137C1.46083 8.70362 1.25 8.40342 1.25 8C1.25 7.59658 1.46083 7.29638 1.66699 7.09863C1.86758 6.90627 2.12801 6.74721 2.39648 6.60645C2.92723 6.3282 3.70068 6.01854 4.65527 5.63672L7.62402 4.44922C9.50081 3.69828 10.6208 3.25 12 3.25Z"
+                  />
+                </svg>
+              </span>
+              <span class="brand-wordmark" aria-hidden="true">
+                <span class="brand-letter" style="--letter: 0">u</span
+                ><span class="brand-letter" style="--letter: 1">a</span
+                ><span class="brand-letter" style="--letter: 2">i</span
+                ><span class="brand-light"
+                  ><span class="brand-letter" style="--letter: 3">t</span
+                  ><span class="brand-letter" style="--letter: 4">e</span
+                  ><span class="brand-letter" style="--letter: 5">c</span
+                  ><span class="brand-letter" style="--letter: 6">h</span
+                  ><span class="brand-letter" style="--letter: 7">e</span></span
+                ><span class="brand-dot">.</span>
+              </span>
+            </a>
+            <div class="welcome-copy">
+              <h1>
+                <span class="welcome-greeting">Olá,</span>
+                <span class="welcome-name">Felipe Maciel</span
+                ><span class="heading-dot">.</span>
+              </h1>
               <p class="page-description">
-                Seu suporte técnico, organizado em um só lugar.
+                <span class="desktop-welcome-description"
+                  >Acompanhe seus chamados de suporte e abra novas solicitações
+                  por aqui.</span
+                >
+                <span class="mobile-only mobile-welcome-description"
+                  >Abra e acompanhe seus chamados.</span
+                >
               </p>
             </div>
-            <button
-              class="button button-primary"
-              id="new-ticket"
-              data-action="new"
-            >
-              <iconify-icon
-                icon="solar:add-circle-linear"
-                aria-hidden="true"
-              ></iconify-icon
-              >Novo chamado
-            </button>
+            <div class="welcome-actions">
+              <button class="header-help" data-action="help">
+                <iconify-icon
+                  icon="solar:question-circle-linear"
+                  aria-hidden="true"
+                ></iconify-icon>
+                <span>Ajuda</span>
+              </button>
+              <button
+                class="button button-primary"
+                id="new-ticket"
+                data-action="new"
+              >
+                <iconify-icon
+                  icon="solar:add-circle-linear"
+                  aria-hidden="true"
+                ></iconify-icon
+                >Novo chamado
+              </button>
+            </div>
           </div>
 
           <section
@@ -393,49 +518,71 @@
                   autocomplete="off"
                 />
               </div>
-              <div class="filter-select">
-                <iconify-icon
-                  icon="solar:box-linear"
-                  aria-hidden="true"
-                ></iconify-icon>
-                <label class="sr-only" for="category-filter"
-                  >Filtrar por categoria</label
-                >
-                <select id="category-filter">
-                  <option value="">Todas as categorias</option>
-                  <option value="hardware">Hardware</option>
-                  <option value="software">Software</option>
-                  <option value="rede">Rede</option>
-                  <option value="outro">Outro</option>
-                </select>
-              </div>
-              <div class="filter-select">
+              <button
+                type="button"
+                id="mobile-filter-toggle"
+                class="mobile-filter-toggle mobile-only"
+                data-mobile-action="filters"
+                aria-controls="filter-options"
+                aria-expanded="false"
+              >
                 <iconify-icon
                   icon="solar:filter-linear"
                   aria-hidden="true"
                 ></iconify-icon
-                ><label class="sr-only" for="status-filter"
-                  >Filtrar por status</label
-                ><select id="status-filter">
-                  <option value="">Todos os status</option>
-                  <option value="aberto">Abertos</option>
-                  <option value="em_andamento">Em andamento</option>
-                  <option value="concluido">Concluídos</option>
-                </select>
-              </div>
-              <div class="filter-select">
-                <iconify-icon
-                  icon="solar:sort-from-top-to-bottom-linear"
-                  aria-hidden="true"
-                ></iconify-icon
-                ><label class="sr-only" for="priority-filter"
-                  >Filtrar por prioridade</label
-                ><select id="priority-filter">
-                  <option value="">Prioridade: todas</option>
-                  <option value="alta">Alta</option>
-                  <option value="media">Média</option>
-                  <option value="baixa">Baixa</option>
-                </select>
+                ><span>Filtros</span
+                ><span
+                  id="mobile-filter-count"
+                  class="mobile-filter-count"
+                  hidden
+                  >0</span
+                >
+              </button>
+              <div id="filter-options" class="filter-options">
+                <div class="filter-select">
+                  <iconify-icon
+                    icon="solar:box-linear"
+                    aria-hidden="true"
+                  ></iconify-icon>
+                  <label class="sr-only" for="category-filter"
+                    >Filtrar por categoria</label
+                  >
+                  <select id="category-filter">
+                    <option value="">Todas as categorias</option>
+                    <option value="hardware">Hardware</option>
+                    <option value="software">Software</option>
+                    <option value="rede">Rede</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                </div>
+                <div class="filter-select">
+                  <iconify-icon
+                    icon="solar:filter-linear"
+                    aria-hidden="true"
+                  ></iconify-icon
+                  ><label class="sr-only" for="status-filter"
+                    >Filtrar por status</label
+                  ><select id="status-filter">
+                    <option value="">Todos os status</option>
+                    <option value="aberto">Abertos</option>
+                    <option value="em_andamento">Em andamento</option>
+                    <option value="concluido">Concluídos</option>
+                  </select>
+                </div>
+                <div class="filter-select">
+                  <iconify-icon
+                    icon="solar:sort-from-top-to-bottom-linear"
+                    aria-hidden="true"
+                  ></iconify-icon
+                  ><label class="sr-only" for="priority-filter"
+                    >Filtrar por prioridade</label
+                  ><select id="priority-filter">
+                    <option value="">Prioridade: todas</option>
+                    <option value="alta">Alta</option>
+                    <option value="media">Média</option>
+                    <option value="baixa">Baixa</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="filter-summary" id="filter-summary" hidden>
@@ -464,7 +611,7 @@
                     <th scope="col">Categoria</th>
                     <th scope="col">Prioridade</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Criado em</th>
+                    <th scope="col">Datas</th>
                     <th scope="col" class="actions-column">Ações</th>
                   </tr>
                 </thead>
@@ -473,9 +620,11 @@
             </div>
             <div class="empty-state" id="empty-state" aria-live="polite">
               <div class="empty-visual" aria-hidden="true">
-                <span class="orbit-dot orbit-dot-one"></span
-                ><span class="orbit-dot orbit-dot-two"></span
-                ><span class="empty-icon"
+                <span class="empty-orbit">
+                  <span class="orbit-dot orbit-dot-one"></span>
+                  <span class="orbit-dot orbit-dot-two"></span>
+                </span>
+                <span class="empty-icon"
                   ><iconify-icon
                     id="empty-icon"
                     icon="solar:link-round-angle-linear"
@@ -522,39 +671,65 @@
             </div>
           </section>
 
-          <section class="tip-banner" aria-label="Dica para abrir um chamado">
-            <span class="tip-icon"
-              ><iconify-icon
-                icon="solar:lightbulb-bolt-linear"
-                aria-hidden="true"
-              ></iconify-icon
-            ></span>
-            <div>
-              <strong>Um bom chamado começa com os detalhes.</strong>
-              <p>
-                Descreva o que aconteceu, onde e desde quando. Isso ajuda a
-                chegar à solução.
-              </p>
-            </div>
-            <span class="tip-tag"
-              >FICA A DICA <span aria-hidden="true">↗</span></span
-            >
-          </section>
           <footer class="page-footer">
             <span>Feito para simplificar o seu dia.</span
             ><span
               >UaiTeche <span aria-hidden="true">©</span>
-              <span id="current-year">2026</span
-              ><span class="footer-divider">/</span
-              ><a
-                href="https://icon-sets.iconify.design/solar/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Ícones Solar · 480 Design</a
-              ></span
+              <span id="current-year">2026</span></span
             >
           </footer>
         </main>
+        <nav class="mobile-nav mobile-only" aria-label="Navegação principal">
+          <button
+            type="button"
+            class="mobile-nav-item is-active"
+            data-mobile-action="home"
+            aria-current="page"
+          >
+            <iconify-icon
+              icon="solar:ticket-linear"
+              aria-hidden="true"
+            ></iconify-icon
+            ><span>Chamados</span>
+          </button>
+          <button
+            type="button"
+            class="mobile-nav-item mobile-nav-new"
+            data-action="new"
+          >
+            <iconify-icon
+              icon="solar:add-circle-linear"
+              aria-hidden="true"
+            ></iconify-icon
+            ><span>Novo chamado</span>
+          </button>
+          <button
+            type="button"
+            id="mobile-menu-button"
+            class="mobile-nav-item"
+            data-mobile-action="open-menu"
+            aria-controls="app-menu"
+            aria-expanded="false"
+          >
+            <iconify-icon
+              icon="solar:filter-linear"
+              aria-hidden="true"
+            ></iconify-icon
+            ><span>Filtros</span>
+          </button>
+          <button
+            type="button"
+            id="mobile-profile-button"
+            class="mobile-nav-item"
+            data-mobile-action="open-profile"
+            aria-controls="mobile-profile-sheet"
+            aria-expanded="false"
+            aria-label="Abrir perfil de Felipe Maciel"
+          >
+            <span class="mobile-nav-avatar" aria-hidden="true">FM</span>
+            <span>Felipe</span>
+          </button>
+        </nav>
       </div>
     </div>
 

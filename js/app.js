@@ -36,12 +36,13 @@ if (window.Notiflix) {
   });
   Notiflix.Confirm.init({
     fontFamily: "DM Sans",
-    borderRadius: "13px",
+    borderRadius: "18px",
     plainText: true,
-    titleColor: "#3e5230",
-    okButtonBackground: "#526a3d",
-    cancelButtonBackground: "#eef2e6",
-    cancelButtonColor: "#6f7c5f",
+    titleColor: "#35472b",
+    okButtonBackground: "#455b2c",
+    okButtonColor: "#ffffff",
+    cancelButtonBackground: "#f6f8f1",
+    cancelButtonColor: "#62734f",
     messageMaxLength: 240,
     titleMaxLength: 80,
     buttonsMaxLength: 40,
@@ -106,27 +107,6 @@ function mostrarAcessoIndisponivel() {
   anunciar(message);
 }
 
-function atualizarAcesso() {
-  let texto = "Acesso indisponível";
-  let conectado = false;
-  if (acessoConfigurado()) {
-    texto = "Conectando…";
-    if (estado.carregado) {
-      texto = "Conectado";
-      conectado = true;
-    }
-    if (estado.erroLista && estado.erroLista.status === 401) {
-      texto = "Acesso não autorizado";
-      conectado = false;
-    }
-  }
-  elemento("connection-label").textContent = texto;
-  elemento("sidebar-session").textContent = texto;
-  elemento("sidebar-session").classList.toggle("is-connected", conectado);
-  elemento("connection-pill").classList.toggle("is-connected", conectado);
-  elemento("refresh").disabled = estado.ocupado || !acessoConfigurado();
-}
-
 function mostrarErroPagina(message) {
   elemento("page-alert-message").textContent = message;
   elemento("page-alert").hidden = !message;
@@ -140,7 +120,6 @@ function tratarAcessoNegado(error) {
   estado.chamados = [];
   estado.carregado = false;
   estado.erroLista = error;
-  atualizarAcesso();
   atualizarTela();
   mostrarErroPagina(error.message);
 }
@@ -179,7 +158,7 @@ function criarBotaoAcao(action, label, iconName, id) {
 
 function criarLinhaChamado(ticket) {
   const row = document.createElement("tr");
-  const titleCell = document.createElement("td");
+  const titleCell = criarElemento("td", "ticket-heading-cell");
   const title = criarElemento("button", "ticket-title-button", ticket.titulo);
   title.type = "button";
   title.dataset.action = "view";
@@ -194,35 +173,47 @@ function criarLinhaChamado(ticket) {
       `#${String(ticket.id).padStart(4, "0")}`,
     ),
   );
-  const categoryCell = document.createElement("td");
+  const categoryCell = criarElemento("td", "ticket-category-cell");
   const category = criarElemento("span", "category-label");
   category.append(
     criarIcone(iconesCategorias[ticket.categoria]),
     document.createTextNode(categorias[ticket.categoria]),
   );
   categoryCell.append(category);
-  const priorityCell = document.createElement("td");
+  const priorityCell = criarElemento("td", "ticket-priority-cell");
   const priority = criarElemento(
     "span",
     `priority-label priority-${ticket.prioridade}`,
   );
   priority.append(
     criarIcone(iconesPrioridades[ticket.prioridade]),
+    criarElemento("span", "mobile-only mobile-priority-prefix", "Prioridade:"),
     document.createTextNode(prioridades[ticket.prioridade]),
   );
   priorityCell.append(priority);
-  const statusCell = document.createElement("td");
+  const statusCell = criarElemento("td", "ticket-status-cell");
   const status = criarElemento("span", `status-badge status-${ticket.status}`);
   status.append(
     criarElemento("span", "mini-dot"),
     document.createTextNode(statusChamados[ticket.status]),
   );
   statusCell.append(status);
-  const dateCell = criarElemento(
-    "td",
-    "date-cell",
-    formatarData(ticket.criado_em),
+  const dateCell = criarElemento("td", "date-cell");
+  const criacao = criarElemento("div", "date-detail");
+  criacao.append(
+    criarElemento("span", "date-label", "Criado"),
+    criarElemento("span", "date-value", formatarData(ticket.criado_em, true)),
   );
+  const atualizacao = criarElemento("div", "date-detail");
+  atualizacao.append(
+    criarElemento("span", "date-label", "Atualizado"),
+    criarElemento(
+      "span",
+      "date-value",
+      formatarData(ticket.atualizado_em, true),
+    ),
+  );
+  dateCell.append(criacao, atualizacao);
   const actionsCell = criarElemento("td", "actions-column");
   const actions = criarElemento("div", "row-actions");
   actions.append(
@@ -245,7 +236,41 @@ function criarLinhaChamado(ticket) {
       ticket.id,
     ),
   );
-  actionsCell.append(actions);
+  const abrir = criarElemento(
+    "button",
+    "mobile-only mobile-ticket-open",
+    "Ver detalhes",
+  );
+  abrir.type = "button";
+  abrir.dataset.action = "view";
+  abrir.dataset.id = String(ticket.id);
+  abrir.disabled = estado.ocupado;
+  abrir.setAttribute("aria-label", `Ver detalhes de ${ticket.titulo}`);
+  abrir.append(criarIcone("arrow-right"));
+  const opcoes = criarElemento("details", "mobile-only mobile-ticket-options");
+  const resumo = criarElemento("summary", "", "Opções");
+  resumo.setAttribute("aria-label", `Opções do chamado ${ticket.titulo}`);
+  resumo.append(criarIcone("alt-arrow-down"));
+  const listaOpcoes = criarElemento("div", "ticket-options-list");
+  const editar = criarBotaoAcao(
+    "edit",
+    `Editar ${ticket.titulo}`,
+    "pen-new-square",
+    ticket.id,
+  );
+  editar.className = "ticket-option";
+  editar.append(document.createTextNode("Editar chamado"));
+  const excluir = criarBotaoAcao(
+    "delete",
+    `Excluir ${ticket.titulo}`,
+    "trash-bin-trash",
+    ticket.id,
+  );
+  excluir.className = "ticket-option delete-button";
+  excluir.append(document.createTextNode("Excluir chamado"));
+  listaOpcoes.append(editar, excluir);
+  opcoes.append(resumo, listaOpcoes);
+  actionsCell.append(actions, abrir, opcoes);
   row.append(
     titleCell,
     categoryCell,
@@ -438,7 +463,6 @@ async function carregarChamados() {
     notificar("failure", error.message);
   } finally {
     definirCarregamento(false);
-    atualizarAcesso();
     atualizarTela();
   }
 }
@@ -656,18 +680,52 @@ function confirmarExclusao(id) {
     Notiflix.Confirm.show(
       "Excluir chamado?",
       mensagem,
-      "Sim, excluir",
+      "Excluir chamado",
       "Cancelar",
       confirmar,
       cancelar,
-      { okButtonBackground: "#af705a" },
     );
+    personalizarConfirmacaoExclusao(chamado);
     prepararTecladoConfirmacao();
   } else if (window.confirm(mensagem)) {
     confirmar();
   } else {
     cancelar();
   }
+}
+
+function personalizarConfirmacaoExclusao(chamado) {
+  const caixa = elemento("NotiflixConfirmWrap");
+  if (!caixa) return;
+  const cabecalho = caixa.querySelector(".notiflix-confirm-head");
+  const titulo = cabecalho.querySelector("h5");
+  const mensagem = titulo.nextElementSibling;
+  const simbolo = criarElemento("span", "confirm-symbol");
+  simbolo.append(criarIcone("trash-bin-trash"));
+  cabecalho.prepend(simbolo);
+  titulo.id = "delete-confirm-title";
+  mensagem.id = "delete-confirm-description";
+  mensagem.className = "confirm-description";
+  const chamadoResumo = criarElemento("div", "confirm-ticket");
+  chamadoResumo.append(
+    criarElemento(
+      "span",
+      "",
+      `Chamado #${String(chamado.id).padStart(4, "0")}`,
+    ),
+    criarElemento("strong", "", chamado.titulo),
+  );
+  mensagem.replaceChildren(
+    criarElemento("p", "", "Você está prestes a excluir este chamado."),
+    chamadoResumo,
+    criarElemento(
+      "p",
+      "confirm-warning",
+      "Esta ação é permanente e não pode ser desfeita.",
+    ),
+  );
+  caixa.setAttribute("aria-labelledby", titulo.id);
+  caixa.setAttribute("aria-describedby", mensagem.id);
 }
 
 // Teclado: Escape cancela, Tab alterna os botões e Enter confirma a escolha.
@@ -749,6 +807,11 @@ document.addEventListener("click", function (event) {
   }
   const button = event.target.closest("[data-action]");
   if (!button || estado.ocupado || confirmandoExclusao) return;
+  const opcoes = button.closest(".mobile-ticket-options");
+  if (opcoes) {
+    opcoes.open = false;
+    opcoes.querySelector("summary").focus({ preventScroll: true });
+  }
   switch (button.dataset.action) {
     case "help":
       abrirModal("help-dialog");
@@ -835,6 +898,5 @@ camposFormulario.forEach(function (name) {
 elemento("current-year").textContent = new Date().getFullYear();
 for (const icone of document.querySelectorAll("iconify-icon"))
   icone.setAttribute("noobserver", "");
-atualizarAcesso();
 atualizarTela();
 if (acessoConfigurado()) carregarChamados();
